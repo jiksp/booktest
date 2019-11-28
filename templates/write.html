@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!-- Webpage Title -->
+  <title>당신의 서재-search</title>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Font Awesome Icons -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Plugin CSS -->
+  <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+
+  <!-- Theme CSS - Includes Bootstrap -->
+  <link href="{{ url_for('static', filename='creative.css') }}" rel="stylesheet">
+  <link href="../static/creative.css" rel="stylesheet">
+
+  <!-- JS -->   
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <!--쿠키 사용자를 위한 Jquery-cookie 임포트 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <!-- 구글폰트 -->
+  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <script>
+profile_info();
+
+$(document).ready(function(){
+  $('#review-posting').html('');
+  listing();
+});
+
+function profile_info() {
+  $.ajax({
+    type: "GET",
+    url: "/profile/name",
+    headers: { 'token_give' : $.cookie('mytoken') },
+    data: {},
+    success: function(response){
+       if (response['result'] == 'success') {
+         $('#user-nickname').text(response['user_id']);
+       } else {
+         alert('닉네임?');
+       }
+    }
+  })
+}
+
+function listing() {
+  $.ajax({
+    type: "GET",
+    url: "/post",
+    headers: { 'token_give' : $.cookie('mytoken') },
+    data: {},
+    success: function(response){
+       if (response['result'] == 'success') {
+
+         let books = response['books'];
+         let review_no = (location.pathname).split('/').pop();
+         let thumbnail = books[review_no-1]['thumbnail'];
+         let title = books[review_no-1]['title'];
+         let author = books[review_no-1]['author'];
+         let comment = books[review_no-1]['comment'];
+         let memo = books[review_no-1]['memo'];
+         make_card(thumbnail, title, author, comment, memo);
+       } else {
+         alert('기사를 받아오지 못했습니다');
+       }
+    }
+  })
+}
+
+function make_card(thumbnail, title, author, comment, memo) {
+      let temp_html = '<div id="review-card" class="">\
+      <div class="search-group">\
+        <h3 class="font-weight-bold write-subtitle-text">작성 후기</h3>\
+      </div>\
+      <hr class="divide-bar">\
+      <div class="write-whitespce-desc">\
+        <img class="write-photo" src="'+thumbnail+'" alt="검색 도서 결과, search result book"/>\
+        <h3 class="write-title font-weight-bold">'+title+'</h3>\
+        <h5 class="write-author font-weight-bold">'+author+'</h5>\
+      </div>\
+      <div class="write-simple-comment-group">\
+        <h5>한줄평</h5>\
+        <p class="write-simple-comment">'+comment+'</p>\
+      </div>\
+      <div class="write-memo-group">\
+        <h5>메모</h5>\
+        <textarea class="write-memo" placeholder="느낀 점을 자유롭게 기록하세요.">'+memo+'</textarea>\
+      </div>\
+      <div class="btn-write-group">\
+        <a href="/main_list"><button type="button" class="btn btn-outline-secondary btn-write-submit">서재로 돌아가기</button></a>\
+      </div>\
+    </div>';
+      $('#review-posting').append(temp_html);
+    }
+    
+  </script>
+</head>
+
+<body>
+  <!-- Masthead -->
+  <header class="header-position">
+    <div class="profile-group">
+      <div>
+        <img class="profile-photo" src="../static/img/portfolio/profile/user_profile_basic.png" alt="프로필 사진, profile photo"/>
+      </div>
+      <p id="user-nickname" class="user-profile-name">유저 닉네임</p>
+    </div>
+    <h1 class="text-uppercase font-weight-bold header-text">당신의 서재</h1>
+  </header>
+  <div id="review-posting">
+    <div id="review-card" class="">
+      <div class="search-group">
+        <h3 class="font-weight-bold write-subtitle-text">작성 후기</h3>
+      </div>
+      <hr class="divide-bar">
+      <div class="write-whitespce-desc">
+        <img class="write-photo" src="../static/img/portfolio/book/book_ex.png" alt="검색 도서 결과, search result book"/>
+        <h3 class="write-title font-weight-bold">책 제목</h3>
+        <h5 class="write-author font-weight-bold">작가, 출판사, 출판년도</h5>
+      </div>
+      <div class="write-simple-comment-group">
+        <h5>한줄평</h5>
+        <input class="write-simple-comment" type="text" name="" placeholder="한줄평을 해시태그와 함께 남겨주세요."></input>
+      </div>
+      <div class="write-memo-group">
+        <h5>메모</h5>
+        <textarea class="write-memo" placeholder="느낀 점을 자유롭게 기록하세요."></textarea>
+      </div>
+      <div class="btn-write-group">
+        <a href="/main_list"><button type="button" class="btn btn-outline-secondary btn-write-submit">서재로 돌아가기</button></a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

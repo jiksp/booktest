@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!-- Webpage Title -->
+  <title>당신의 서재-main</title>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Font Awesome Icons -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Plugin CSS -->
+  <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+
+  <!-- Theme CSS - Includes Bootstrap -->
+  <link href="{{ url_for('static', filename='creative.css') }}" rel="stylesheet">
+
+  <!-- JS -->   
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <!--쿠키 사용자를 위한 Jquery-cookie 임포트 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+  <!-- 구글폰트 -->
+  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
+  <script>
+
+$(document).ready(function(){
+      $('#card-book-posting').html('');
+      listing();
+    });
+
+
+function profile_info() {
+      $.ajax({
+        type: "GET",
+        url: "/profile/name",
+        headers: { 'token_give' : $.cookie('mytoken') },
+        data: {},
+        success: function(response){
+           if (response['result'] == 'success') {
+             $('#user-nickname').text(response['user_id']);
+             $('#user-book-count').text(response['user_id']+' 님의 서재 ('+response['books'].length+')');
+           } else {
+             alert('닉네임?');
+           }
+        }
+      })
+    }
+
+
+function listing() {
+      $.ajax({
+        type: "GET",
+        url: "/post",
+        headers: { 'token_give' : $.cookie('mytoken') },
+        data: {},
+        success: function(response){
+           if (response['result'] == 'success') {
+             let books = response['books'];
+             profile_info();
+             for (let i = books.length-1; i >= 0; i--) {
+               make_card(
+                books[i]['thumbnail'],
+                books[i]['title'],
+                books[i]['author'],
+                books[i]['comment'],
+                books[i]['memo'],
+                books[i]['review_no']
+                )
+             }
+           } else {
+             alert('기사를 받아오지 못했습니다');
+           }
+        }
+      })
+    }
+
+function make_card(thumbnail, title, author, comment, memo,review_no) {
+      let temp_html = '<div class="card-deck-item">\
+        <!-- 추천 도서 표시-->\
+        <img class="star-book-photo star-book-photo-75" src="../static/img/portfolio/search/white_star.png" alt="추천 도서 저장, star bookmark"/>\
+        <!-- 추천 도서 취소 표시-->\
+        <img class="star-book-cancel star-book-cancel-75" src="../static/img/portfolio/search/white_cancel.png" alt="추천 도서 취소, star bookmark cancel"/>\
+        <!-- 저장한 도서 카드-->\
+        <div class="card-deck-item-list">\
+          <a href="/review/'+review_no+'">\
+            <!-- 저장한 도서 카드(사진 이미지)-->\
+            <img class="card-deck-item-photo" src="'+thumbnail+'" alt="도서 이미지, book image"/>\
+            <!-- 저장한 도서 카드(문서 요약)-->\
+            <div class="card-deck-item-doc">\
+              <p class="card-deck-item-title">'+title+'</p>\
+              <p class="card-deck-item-author">'+author+'</p>\
+              <p class="write-simple-comment">'+comment+'</p>\
+              <p class="write-memo">'+memo+'</textarea>\
+            </div>\
+          </a>\
+        </div>\
+      </div>';
+      $('#card-book-posting').append(temp_html);
+    }
+
+  </script>
+</head>
+
+<body>
+  <!-- Masthead -->
+  <header class="header-position">
+    <div class="profile-group">
+      <div>
+        <img class="profile-photo" src="../static/img/portfolio/profile/user_profile_basic.png" alt="프로필 사진, profile photo"/>
+      </div>
+      <p id="user-nickname" class="user-profile-name">유저 닉네임</p>
+    </div>
+    <h1 class="text-uppercase font-weight-bold header-text">당신의 서재</h1>
+  </header>
+  <div class="subtitle-group">
+    <div>
+      <a href="/search/result"><img class="search-photo" src="../static/img/portfolio/search/search.png" alt="검색 사진, search photo"/></a>
+    </div>
+    <div class="subtitle">
+      <p id="user-book-count" class="subtitle-text">님의 도서 리스트</p>
+    </div>
+  </div>
+    <div id="card-book-posting" class="card-deck-container">
+      <div class="card-deck-item">
+        <!-- 추천 도서 표시-->
+        <img class="star-book-photo star-book-photo-75" src="../static/img/portfolio/search/white_star.png" alt="추천 도서 저장, star bookmark"/>
+        <!-- 추천 도서 취소 표시-->
+        <img class="star-book-cancel star-book-cancel-75" src="../static/img/portfolio/search/white_cancel.png" alt="추천 도서 취소, star bookmark cancel"/>
+        <!-- 저장한 도서 카드-->
+        <div class="card-deck-item-list">
+          <!-- 저장한 도서 카드(사진 이미지)-->
+          <img class="card-deck-item-photo" src="../static/img/portfolio/book/book_ex.png" alt="도서 이미지, book image"/>
+          <!-- 저장한 도서 카드(문서 요약)-->
+          <div class="card-deck-item-doc">
+            <p class="card-deck-item-title">책 제목</p>
+            <p class="card-deck-item-author">작가, 출판사, 출판년도</p>
+            <input class="write-simple-comment" type="text" name="" placeholder="한줄평을 해시태그와 함께 남겨주세요."></input>
+            <textarea class="write-memo" placeholder="느낀 점을 자유롭게 기록하세요."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="card-deck-item">
+        <!-- 추천 도서 표시-->
+        <img class="star-book-photo star-book-photo-75" src="../static/img/portfolio/search/white_star.png" alt="추천 도서 저장, star bookmark"/>
+        <!-- 추천 도서 취소 표시-->
+        <img class="star-book-cancel star-book-cancel-75" src="../static/img/portfolio/search/white_cancel.png" alt="추천 도서 취소, star bookmark cancel"/>
+        <!-- 저장한 도서 카드-->
+        <div class="card-deck-item-list">
+          <!-- 저장한 도서 카드(사진 이미지)-->
+          <img class="card-deck-item-photo" src="../static/img/portfolio/book/book_ex.png" alt="도서 이미지, book image"/>
+          <!-- 저장한 도서 카드(문서 요약)-->
+          <div class="card-deck-item-doc">
+            <p class="card-deck-item-title">책 제목</p>
+            <p class="card-deck-item-author">작가, 출판사, 출판년도</p>
+            <input class="write-simple-comment" type="text" name="" placeholder="한줄평을 해시태그와 함께 남겨주세요."></input>
+            <textarea class="write-memo" placeholder="느낀 점을 자유롭게 기록하세요."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="card-deck-item">
+        <!-- 추천 도서 표시-->
+        <img class="star-book-photo star-book-photo-75" src="../static/img/portfolio/search/white_star.png" alt="추천 도서 저장, star bookmark"/>
+        <!-- 추천 도서 취소 표시-->
+        <img class="star-book-cancel star-book-cancel-75" src="../static/img/portfolio/search/white_cancel.png" alt="추천 도서 취소, star bookmark cancel"/>
+        <!-- 저장한 도서 카드-->
+        <div class="card-deck-item-list">
+          <!-- 저장한 도서 카드(사진 이미지)-->
+          <img class="card-deck-item-photo" src="../static/img/portfolio/book/book_ex.png" alt="도서 이미지, book image"/>
+          <!-- 저장한 도서 카드(문서 요약)-->
+          <div class="card-deck-item-doc">
+            <p class="card-deck-item-title">책 제목</p>
+            <p class="card-deck-item-author">작가, 출판사, 출판년도</p>
+            <input class="write-simple-comment" type="text" name="" placeholder="한줄평을 해시태그와 함께 남겨주세요."></input>
+            <textarea class="write-memo" placeholder="느낀 점을 자유롭게 기록하세요."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="card-deck-item">
+        <img class="star-book-photo star-book-photo-75" src="../static/img/portfolio/search/white_star.png" alt="추천 도서 저장, star bookmark"/>
+        <a href="/search/result"><img class="plus-book-photo plus-book-photo-75" src="../static/img/portfolio/search/white_plus.png" alt="도서 추가, plus book"/></a>
+        <p class="card-deck-comment text-white-75 font-weight-light">읽었던 책을 등록하세요.</p>
+      </div>
+      <div class="card-deck-item">
+        <img class="star-book-photo star-book-photo-75" src="../static/img/portfolio/search/white_star.png" alt="추천 도서 저장, star bookmark"/>
+        <a href="/search/result"><img class="plus-book-photo plus-book-photo-75" src="../static/img/portfolio/search/white_plus.png" alt="도서 추가, plus book"/></a>
+        <p class="card-deck-comment text-white-75 font-weight-light">읽었던 책을 등록하세요.</p>
+      </div>
+    </div>
+    <div class="subtitle-group">
+      <div class="subtitle">
+        <p class="subtitle-text">님의 위시 리스트</p>
+      </div>
+    </div>
+    <div class="card-deck-container">
+      <div class="card-deck-item card-deck-wish-item">
+        <!-- 추천 도서 표시-->
+        <img class="star-book-photo star-book-photo-75" src="../static/img/portfolio/search/white_star.png" alt="추천 도서 저장, star bookmark"/>
+        <!-- 추천 도서 취소 표시-->
+        <img class="star-book-cancel star-book-cancel-75" src="../static/img/portfolio/search/white_cancel.png" alt="추천 도서 취소, star bookmark cancel"/>
+        <!-- 저장한 도서 카드-->
+        <div class="card-deck-item-list">
+          <!-- 저장한 도서 카드(사진 이미지)-->
+          <img class="card-deck-item-photo" src="../static/img/portfolio/book/book_ex.png" alt="도서 이미지, book image"/>
+          <!-- 저장한 도서 카드(문서 요약)-->
+          <div class="card-deck-item-doc">
+            <p class="card-deck-item-title">책 제목</p>
+            <p class="card-deck-item-author">작가, 출판사, 출판년도</p>
+            <input class="write-simple-comment" type="text" name="" placeholder="한줄평을 해시태그와 함께 남겨주세요."></input>
+            <textarea class="write-memo" placeholder="느낀 점을 자유롭게 기록하세요."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="card-deck-item">
+        <img class="plus-book-photo plus-book-photo-75" src="../static/img/portfolio/search/white_plus.png" alt="도서 추가, plus book"/>
+        <p class="wish-card-deck-comment text-white-75 font-weight-light">읽고 싶은 책이 있으면 담아두세요.</p>
+      </div>
+      <div class="card-deck-item">
+        <img class="plus-book-photo plus-book-photo-75" src="../static/img/portfolio/search/white_plus.png" alt="도서 추가, plus book"/>
+        <p class="wish-card-deck-comment text-white-75 font-weight-light">읽고 싶은 책이 있으면 담아두세요.</p>
+      </div>
+    </div>
+</body>
+</html>

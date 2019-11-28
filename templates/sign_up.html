@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!-- Webpage Title -->
+  <title>당신의 서재-sign up</title>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Font Awesome Icons -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Plugin CSS -->
+  <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+
+  <!-- Theme CSS - Includes Bootstrap -->
+  <link href="{{ url_for('static', filename='creative.css') }}" rel="stylesheet">
+  <link href="../static/creative.css" rel="stylesheet">
+
+  <!-- JS -->   
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <!-- 구글폰트 -->
+  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <script>
+
+  function sign_up() {
+    let user_email = $('#user_email').val();
+    let user_pw = $('#user_pw').val();
+    let user_id = $('#user_id').val();
+    let user_birth = $('#user_birth').val();
+  
+
+    $.ajax({
+        type: "POST",
+        url: "/api/register",
+        data: { 
+          user_email_give:user_email, 
+          user_pw_give:user_pw, 
+          user_id_give:user_id, 
+          user_birth_give:user_birth },
+        success: function(response){
+            if (response['result'] == 'success'){
+              alert('회원가입이 완료되었습니다.')
+              window.location.href='/main_list'
+            } else{
+              alert(response['msg'])
+            }
+        }
+      })
+    }
+    
+</script>
+
+</head>
+<body>
+  <header class="header-position">
+     <h1 class="text-uppercase font-weight-bold header-text">회원 가입</h1>
+  </header>
+  <div class="form-wrap">
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <input id="user_email" type="email" class="form-control form-check-style" placeholder="이메일 주소">
+        </div>
+        <div class="form-group col-md-4">
+          <button id="user_email_check" type="submit" class="btn btn-primary mb-2 btn-box">중복 확인</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <input id="user_pw" type="password" class="form-control form-check-style" placeholder="비밀번호">
+      </div>
+      <div class="form-group">
+        <input id="user_pw_check" type="password" class="form-control form-check-style" placeholder="비밀번호 확인">
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <input id="user_id" type="" class="form-control form-check-style" placeholder="아이디(별명)">
+        </div>
+        <div class="form-group col-md-4">
+          <button id="user_id_check" type="submit" class="btn btn-primary mb-2 btn-box">중복 확인</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <input id="user_birth" type="password" class="form-control form-check-style" placeholder="생년월일(8자리 입력)">
+        </div>
+        <div class="form-group col-md-3">
+          <div class="form-centered">
+            <input id="user_gender_f" class="form-check-input" type="radio" name="inlineRadioOptions" value="female">
+            <label class="form-check-label">여성</label>
+          </div>
+        </div>
+        <div class="form-group col-md-3">
+          <div class="form-centered">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" value="male">
+            <label id="user_gender_m" class="form-check-label">남성</label>
+          </div>
+        </div>
+      </div>
+  <div class="submit-btn-center">
+    <button onclick="sign_up()" type="submit" class="btn btn-primary submit-btn-center">회원가입</button>
+  </div>
+</div>
+</body>
+</html>
