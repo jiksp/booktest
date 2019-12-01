@@ -9933,9 +9933,7 @@ header.masthead h1 {
   align-items: center;
 }
 
-.card-deck-container: nth-child() {
-  display: flex;
-}
+
 
 .card-deck-item {
   display: flex;
