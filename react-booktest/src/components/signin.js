@@ -6,12 +6,6 @@ import Bottombtn from "./bottombutton";
 import Button from "./button";
 
 class Signin extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      TTutton: { btntxt: "회원가입하기" }
-    };
-  }
   render() {
     return (
       <header class="masthead">

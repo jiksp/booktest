@@ -5,7 +5,7 @@ class Button extends Component {
     return (
       <div class="login-check-button-combo">
         <button type="button" class="btn btn-outline-light login-check-button">
-          <a href="/register">{this.state.TTutton.btntxt}></a>
+          <a href="/register">회원가입하기</a>
         </button>
       </div>
     );
