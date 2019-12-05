@@ -19,9 +19,9 @@ class Signin extends Component {
             </div>
             <div class="col-lg-8 align-self-baseline">
               <p class="text-white-75 font-weight-light mb-5">
-                명깊게 읽은 책의 구절을 저장하고, 자신만의 서재를 만들어 가세요.
-                자신의 취향과 비슷한 다른 사람의 서재를 구경하고 자신에게 맞는
-                책을 추천 받을 수 있습니다.
+                감명깊게 읽은 책의 구절을 저장하고, 자신만의 서재를 만들어
+                가세요. 자신의 취향과 비슷한 다른 사람의 서재를 구경하고
+                자신에게 맞는 책을 추천 받을 수 있습니다.
               </p>
               <div class="login-input">
                 <div>
