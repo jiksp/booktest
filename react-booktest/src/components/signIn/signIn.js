@@ -79,6 +79,28 @@ const Signin = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
   const [helperText, setHelperText] = useState("")
   const [error, setError] = useState(false)
+  const [user, setUser] = useState({
+    email: "",
+    password: ""
+  })
+  const updateContextState = () => {
+    const { email, password } = user
+
+    updateState({
+      ...registerData,
+      email,
+      password,
+      point: 0
+    })
+  }
+  const registerCheck = () => {
+    if (user.email !== "" && user.password !== "") {
+      updateContextState()
+      NavigationService.navigate("RegisterProfile", {
+        screen: "RegisterProfile"
+      })
+    }
+  }
 
   return (
     <Container className={classes.container} maxWidth="false">
@@ -97,12 +119,23 @@ const Signin = () => {
                 :)
               </Typography>
             </div>
-            <form className={classes.form}>
-              <InputId />
+            <form
+              className={classes.form}
+              onSubmit={e => {
+                e.preventDefault()
+                // Auth handler
+              }}
+            >
+              <InputId nChangeText={nickname => setUser({ ...user, nickname })} />
               <InputPw />
               <IdSave />
             </form>
-            <BottomButton className={classes.button} name="로그인"></BottomButton>
+            <BottomButton
+              className={classes.button}
+              name={"로그인"}
+              transparent
+              onPress={() => registerCheck()}
+            ></BottomButton>
           </div>
         </ThemeProvider>
       </Container>
